@@ -28,6 +28,29 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     /**
+     * Busca todas as inscrições pelo Id de usuário do token JWT e Header da requisição.
+     * <p>
+     * O acesso é restrito ao próprio usuário ou a um administrador.
+     *
+     * @param requesterId O ID do usuário solicitante.
+     * @param requesterRoles As roles do usuário solicitante.
+     * @return Um {@link ResponseEntity} com status {@code 200 OK} e a lista de inscrições do usuário.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<List<RegistrationResponseDTO>> getRegistrationByToken(
+            @RequestHeader("X-User-Id") String requesterId,
+            @RequestHeader("X-User-Roles") String requesterRoles
+    ) {
+
+        List<RegistrationResponseDTO> response = registrationService.getAllRegistrationsByUser(requesterId, requesterId, requesterRoles)
+                .stream()
+                .map(RegistrationResponseDTO::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * Retorna uma lista de todas as inscrições do sistema.
      * <p>
      * Este endpoint é restrito a administradores, pois lista
