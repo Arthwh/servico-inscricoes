@@ -11,8 +11,7 @@ public record RegistrationResponseDTO (
         String userId,
         Instant checkIn,
         RegistrationStatus status,
-        Instant created_at
-
+        Instant createdAt
 ) {
     public static RegistrationResponseDTO fromEntity(Registration registration) {
         if (registration == null) {

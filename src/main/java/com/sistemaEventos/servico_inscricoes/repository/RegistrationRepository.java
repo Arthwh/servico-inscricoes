@@ -28,5 +28,5 @@ public interface RegistrationRepository extends JpaRepository<Registration, Stri
     List<Registration> findAllActiveByUserId(String userId);
 
     @Query("SELECT r FROM Registration r WHERE r.userId = ?1 AND r.eventId = ?2 AND r.deletedAt IS NULL")
-    Registration findActiveByUserAndEventId(String userId, String eventId);
+    List<Registration> findActiveByUserAndEventId(String userId, String eventId);
 }

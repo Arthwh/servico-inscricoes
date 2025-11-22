@@ -98,10 +98,14 @@ public class RegistrationService {
     public Registration createRegistration (RegistrationCreateDTO dto, String requesterId, String requesterRoles) {
         authorizationHelper.checkOwnershipOrAdmin(dto.userId(), requesterId , requesterRoles);
 
-        Registration registrationCheck = registrationRepository.findActiveByUserAndEventId(dto.userId(), dto.eventId());
-        if (registrationCheck != null) {
-            throw new IllegalStateException("O usuário já está inscrito nesse evento.");
-        }
+        registrationRepository.findActiveByUserAndEventId(dto.userId(), dto.eventId())
+                .stream()
+                .filter(registration -> {
+                    if (!registration.getStatus().equals(RegistrationStatus.CANCELED)) {
+                        throw new IllegalStateException("O usuário já está inscrito nesse evento.");
+                }
+                    return false;
+                });
 
         Registration registration = new Registration();
         registration.setId(UUID.randomUUID().toString());

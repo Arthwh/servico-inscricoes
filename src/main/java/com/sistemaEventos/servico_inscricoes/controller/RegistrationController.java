@@ -200,6 +200,8 @@ public class RegistrationController {
             @RequestHeader("X-User-Id") String requesterId,
             @RequestHeader("X-User-Roles") String requesterRoles
     ) {
+
+        System.out.println(id);
         RegistrationResponseDTO response = RegistrationResponseDTO.fromEntity(registrationService.cancelRegistration(id, requesterId, requesterRoles));
 
         return ResponseEntity.ok(response);
