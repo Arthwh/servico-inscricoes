@@ -33,6 +33,20 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handler para Erros 400 (Validação de DTO)
+     */
+    @ExceptionHandler(NonApplicableForCertificationException.class)
+    public ResponseEntity<ApiErrorResponse> handleNonApplicableForCertification(NonApplicableForCertificationException ex) {
+        String errorMessage = ex.getMessage();
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                errorMessage,
+                Instant.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
      * Handler para erro de AccessDenied (403)
      */
     @ExceptionHandler(AccessDeniedException.class)
@@ -51,6 +65,19 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RegistrationNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleRegistrationNotFound(RegistrationNotFoundException ex) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                Instant.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    /**
+     * Handler para Erros 404 (Não Encontrado)
+     */
+    @ExceptionHandler(CertificateDataNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleCertificateDataNotFound(CertificateDataNotFoundException ex) {
         ApiErrorResponse errorResponse = new ApiErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),

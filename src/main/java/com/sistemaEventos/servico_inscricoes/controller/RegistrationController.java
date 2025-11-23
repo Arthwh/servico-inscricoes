@@ -224,4 +224,7 @@ public class RegistrationController {
         registrationService.deleteRegistration(id, requesterId, requesterRoles);
         return ResponseEntity.ok().build();
     }
+
+
+
 }
