@@ -25,10 +25,8 @@ import java.util.UUID;
 
 @Service
 public class CertificateService {
-
     @Autowired
     private SpringTemplateEngine templateEngine; // Thymeleaf
-
     @Autowired
     private UserClient userClient;   // Feign Client
     @Autowired

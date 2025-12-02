@@ -10,6 +10,9 @@ import com.sistemaEventos.servico_inscricoes.security.AuthorizationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.access.AccessDeniedException;
+import com.sistemaEventos.servico_inscricoes.model.NotificationChannel;
+import com.sistemaEventos.servico_inscricoes.model.NotificationTemplate;
+
 
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +30,8 @@ public class RegistrationService {
     private RegistrationRepository registrationRepository;
     @Autowired
     private AuthorizationHelper authorizationHelper;
+    @Autowired
+    private NotificationService notificationService;
 
     /**
      * Retorna todas as inscrições ativas do sistema.
@@ -113,7 +118,10 @@ public class RegistrationService {
         registration.setEventId(dto.eventId());
         registration.setStatus(RegistrationStatus.CONFIRMED);
 
-        return registrationRepository.save(registration);
+        registration = registrationRepository.save(registration);
+
+        notificationService.sendNotification(registration, NotificationChannel.EMAIL, NotificationTemplate.REGISTRATION);
+        return registration;
     }
 
     /**
@@ -167,8 +175,11 @@ public class RegistrationService {
 
         registration.setCheckIn(checkIn);
         registration.setStatus(RegistrationStatus.CHECKED_IN);
+        registration = registrationRepository.save(registration);
 
-        return registrationRepository.save(registration);
+        notificationService.sendNotification(registration, NotificationChannel.EMAIL, NotificationTemplate.REGISTRATION_CHECKIN);
+
+        return registration;
     }
 
     /**
@@ -197,8 +208,11 @@ public class RegistrationService {
         }
 
         registration.setStatus(RegistrationStatus.CANCELED);
+        registration = registrationRepository.save(registration);
 
-        return registrationRepository.save(registration);
+        notificationService.sendNotification(registration, NotificationChannel.EMAIL, NotificationTemplate.REGISTRATION_CANCEL);
+
+        return registration;
     }
 
     /**
